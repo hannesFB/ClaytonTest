@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="pass the selected option to the parent application">
+    <aura:attribute name="optionByEvent" type="String"/>
+</aura:event>

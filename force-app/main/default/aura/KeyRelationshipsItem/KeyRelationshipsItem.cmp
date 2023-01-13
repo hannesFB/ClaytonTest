@@ -1,0 +1,22 @@
+<aura:component>
+	<aura:attribute name="isExpand" type="boolean" default="false"/>
+	<tr>
+		<td>
+			<lightning:buttonIcon  variant="bare" onclick="{! c.handleClick }" alternativeText="Expand" />
+		</td>
+		<td>
+			<lightning:icon iconName="standard:avatar_loading" />
+			<lightning:formattedUrl value="my/path" />
+			<ui:outputText value="Text"/>
+		</td>
+		<td>
+			<lightning:formattedUrl value="my/path" />
+			<lightning:progressBar value="50" size="large" />
+		</td>
+		<td>
+			<lightning:button variant="brand" label="Brand action" title="Brand action" onclick="{! c.handleClick }" />
+		</td>
+		<aura:if isTrue="{!v.isExpand}">
+		</aura:if>
+	</tr>
+</aura:component>

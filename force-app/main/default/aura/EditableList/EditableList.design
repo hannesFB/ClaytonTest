@@ -1,0 +1,30 @@
+<design:component>
+	<design:attribute name="relationshipFieldApi" label="Related Field Api" description="The API name of the lookup or master detail that connects the parent and child records." />
+    <design:attribute name="parentSobjectApi" label="Parent sObject Api" description="The hosting objects Api name." />
+    <design:attribute name="childSobjectApi" label="Child sObject Api" description="The child of the hosting objects Api name." />
+    <design:attribute name="childSobjectNonEditFieldApis" label="Non Edit Fields" description="Api field names you want to display from the child component on the table that wont be editable in a comma serparated list." />
+    <design:attribute name="childSobjectEditFieldApis" label="Edit Fields" description="Api field names you want to display from the child component on the table that will be editable in a comma serparated list." />
+    <design:attribute name="filterFieldApis" label="Filter Fields" description="Api field names you want to display from the child component in the filters section in a comma serparated list." />
+    <design:attribute name="Icon" label="Title Icon" description="Header Icon. ex: Categories:Icon https://www.lightningdesignsystem.com/icons/" />
+    <design:attribute name="headerTitle" label="Header Title" description="Header Title." />
+    <design:attribute name="includedCustomActions" label="Custom Actions" description="Unique Names of the custom actions. Include multiple with comma list." />
+
+    <design:attribute name="sortByFirst" label="Sort By First" description="Api field name that you want to sort by first." />
+    <design:attribute name="sortBySecond" label="Sort By Second" description="Api field name that you want to sort by Second." />
+    <design:attribute name="sortOrder" label="Sort Order" datasource="ASC,DESC,ASC NULLS FIRST,ASC NULLS LAST,DESC NULLS FIRST,DESC NULLS LAST" description="Order by. EX: ASC = a,b,c... or 1,2,3...." />
+    <design:attribute name="extraFilters" label="Extra Soql Filter" description="Add soql directly as a filter. Must be in soql format." />    
+    <design:attribute name="limit" label="Record Limit" description="Query record limit. Leave blank if you want no limit." />
+    <design:attribute name="pageSize" label="Page Size" description="Number of records per page." />
+    
+    <design:attribute name="showTopButtons" label="Show All Buttons Top" description="Show All Buttons Top." />
+    <design:attribute name="showBottomButtons" label="Show All Buttons Bottom" description="Show All Buttons Bottom." />
+    
+    <design:attribute name="showSaveAll" label="Show Save All" description="Show Save All button." />
+    <design:attribute name="showFilters" label="Show Filter Section" description="Show Filter Section." />
+    <design:attribute name="showLineActions" label="Show Line Action Save" description="Show Line Actions." />
+    <design:attribute name="showLineActionDelete" label="Show Line Action Delete" description="Show Line Actions." />
+    <design:attribute name="showLineActionEdit" label="Show Line Action Edit" description="Show Line Actions." />
+
+    <design:attribute name="colWidth" label="Main Column Css" description="Change the column css including width." />
+    <design:attribute name="actionColWidth" label="Action Column Css" description="Change the action column css including width." />
+</design:component>

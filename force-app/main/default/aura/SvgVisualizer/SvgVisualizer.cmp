@@ -1,0 +1,7 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<div class="slds-section slds-is-open">
+        <h3 class="slds-section__title slds-theme_shade slds-p-around_small">
+            <lightning:icon src="{!$Resource.testSVG+'#add_contact'}"/>
+        </h3>
+    </div>
+</aura:component>
