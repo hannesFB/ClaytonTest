@@ -1,0 +1,38 @@
+{
+  "apexInsertFinalNewline": false,
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": "**/lwc/**/*.html",
+      "options": { 
+        "parser": "lwc", 
+        "tabWidth": 4 
+      }
+    },
+    {
+      "files": "**/lwc/**/*.js",
+      "options": { "tabWidth": 4 }
+    },
+    {
+      "files": "*.{cmp,page,component}",
+      "options": {
+        "parser": "html",
+        "tabWidth": 4
+      }
+    },
+    {
+      "files": "**/aura/**/*.js",
+      "options": { "tabWidth": 4 }
+    },
+    {
+      "files": "**/lwc/**/*.css",
+      "options": { "tabWidth": 4 }
+    },
+    {
+      "files": "*.{cls,apex,trigger}",
+      "options": {
+        "tabWidth": 4
+      }
+    }
+  ]
+}
