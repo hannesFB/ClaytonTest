@@ -442,11 +442,7 @@ public class EditableListController {
 	@AuraEnabled
 	public static void myBaClass(List<Id> myIds){
 		for(Id myid : myIds){
-			for(Account a : [SELECT Id FROM Account WHERE Id IN: myIds]){
-				for(Account a : [SELECT Id FROM Account WHERE Id IN: myIds]){
-					system.debug('Print');
-				}
-			}
+			system.debug('Print');
 		}
 	}
 }
