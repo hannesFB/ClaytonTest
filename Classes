@@ -439,5 +439,13 @@ public class EditableListController {
 		}
 		return etFormActions;
 	}
+	
+	public void badMethod(List<Id> testIds){
+		for(Id myId : testIds){
+			for(Account a : [SELECT Id from Account WHERE Id =: myId]){
+				system.debug(a.id);
+			}
+		}
+	}
 
 }
