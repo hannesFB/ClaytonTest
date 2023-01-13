@@ -1,0 +1,122 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global">
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="EmailSubject" type="String" default="Your Whitman Weekly Digest for Jan 1st"/>
+	<aura:attribute name="BannerNotification" type="String" default="This Email Will Send on Jan 1st at 8AM"/>
+	<aura:attribute name="WeekDate" type="String" default="Jan 1st"/>
+
+	<aura:attribute name="AnnouncmentsItems" type="object[]" default="{}"/>
+	<aura:attribute name="DeadlinesItems" type="object[]" default="{}"/>
+	<aura:attribute name="UpcomingEventsItems" type="object[]" default="{}"/>
+	<aura:attribute name="ArticlesItems" type="object[]" default="{}"/>
+
+	<aura:attribute name="GroupList" type="object[]" default="{}"/>
+	<aura:attribute name="DisableArticle" type="boolean" default="false"/>
+	<aura:attribute name="DisableEnableCat" type="boolean" default="false"/>
+	<aura:attribute name="DisableDisableCat" type="boolean" default="false"/>
+	<aura:attribute name="ShowArticleInfo" type="boolean" default="false"/>
+
+	<aura:attribute name="values" type="String[]" access="private" />
+    <aura:attribute name="dragid" type="Integer" access="private" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+	<article class="slds-card">
+		<div class="slds-grid">
+			<div class="slds-col" Style="padding:10px;">
+				<div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" role="alert">{!v.BannerNotification}</div>
+				<div class="titleHeader">{!v.EmailSubject}</div>
+		
+				<!--Announcments Section-->
+				<div class="slds-section slds-theme_info slds-is-open">
+					<h3 class="slds-section__title sectionHeader">
+						<span class="slds-truncate" title="Announcments">Announcments</span>
+					</h3>
+					<div aria-hidden="false" class="slds-section__content slds-theme_default">
+						<div class="droparea" ondragover="{!c.cancel}" ondragenter="{!c.cancel}" ondrop="{!c.drop}">
+							<aura:iteration items="{!v.AnnouncmentsItems}" indexVar="index" var="value">
+								<div class="row card" data-items3="{!value.enable}" data-items2="{!value.disableArticle}" data-items="{!value.groups}" draggable="true" ondragstart="{!c.dragstart}" data-drag-id="{!index}" Style="border-top: 1px solid black;" onclick="{!c.setVal}">
+									<c:WeeklyDigestItem Title="{!value.title}" Time="{!value.time}" Remove="{!value.remove}" BodyStr="{!value.bodyStr}" LearnMore="{!value.link}" 
+										GroupItems="{!value.groups}" DisableArticle="{!value.disableArticle}" DisableEnableCat="{!value.enable}"/>
+								</div>
+							</aura:iteration>
+						</div>
+					</div>
+				</div>
+				<!--END Announcments Section-->
+
+				<!--Deadlines Section-->
+				<div class="slds-section slds-theme_info slds-is-open">
+					<h3 class="slds-section__title sectionHeader">
+						<span class="slds-truncate" title="Deadlines">Deadlines</span>
+					</h3>
+					<div aria-hidden="false" class="slds-section__content slds-theme_default">
+						<div class="droparea" ondragover="{!c.cancel}" ondragenter="{!c.cancel}" ondrop="{!c.drop}">
+							<aura:iteration items="{!v.DeadlinesItems}" indexVar="index" var="value">
+								<div class="row card" data-items3="{!value.enable}" data-items2="{!value.disableArticle}" data-items="{!value.groups}" draggable="true" ondragstart="{!c.dragstart}" data-drag-id="{!index}" Style="border-top: 1px solid black;" onclick="{!c.setVal}">
+									<c:WeeklyDigestItem Title="{!value.title}" Time="{!value.time}" Remove="{!value.remove}" BodyStr="{!value.bodyStr}" LearnMore="{!value.link}" 
+										GroupItems="{!value.groups}" DisableArticle="{!value.disableArticle}" DisableEnableCat="{!value.enable}"/>
+								</div>
+							</aura:iteration>
+						</div>
+					</div>
+				</div>
+				<!--END Deadlines Section-->
+
+				<!--Upcoming Events Section-->
+				<div class="slds-section slds-theme_info slds-is-open">
+					<h3 class="slds-section__title sectionHeader">
+						<span class="slds-truncate" title="Upcoming Events">Upcoming Events</span>
+					</h3>
+					<div aria-hidden="false" class="slds-section__content slds-theme_default">
+						<div class="droparea" ondragover="{!c.cancel}" ondragenter="{!c.cancel}" ondrop="{!c.drop}">
+							<aura:iteration items="{!v.UpcomingEventsItems}" indexVar="index" var="value">
+								<div class="row card" data-items3="{!value.enable}" data-items2="{!value.disableArticle}" data-items="{!value.groups}" draggable="true" ondragstart="{!c.dragstart}" data-drag-id="{!index}" Style="border-top: 1px solid black;" onclick="{!c.setVal}">
+									<c:WeeklyDigestItem Title="{!value.title}" Time="{!value.time}" Remove="{!value.remove}" BodyStr="{!value.bodyStr}" LearnMore="{!value.link}" 
+										GroupItems="{!value.groups}" DisableArticle="{!value.disableArticle}" DisableEnableCat="{!value.enable}"/>
+								</div>
+							</aura:iteration>
+						</div>
+					</div>
+				</div>
+				<!--END Upcoming Events Section-->
+
+				<!--Articles Section-->
+				<div class="slds-section slds-theme_info slds-is-open">
+					<h3 class="slds-section__title sectionHeader">
+						<span class="slds-truncate" title="Articles">Articles</span>
+					</h3>
+					<div aria-hidden="false" class="slds-section__content slds-theme_default">
+						<div class="droparea" ondragover="{!c.cancel}" ondragenter="{!c.cancel}" ondrop="{!c.drop}">
+							<aura:iteration items="{!v.ArticlesItems}" indexVar="index" var="value">
+								<div class="row card" data-items3="{!value.enable}" data-items2="{!value.disableArticle}" data-items="{!value.groups}" draggable="true" ondragstart="{!c.dragstart}" data-drag-id="{!index}" Style="border-top: 1px solid black;" onclick="{!c.setVal}">
+									<c:WeeklyDigestItem Title="{!value.title}" Time="{!value.time}" Remove="{!value.remove}" BodyStr="{!value.bodyStr}" LearnMore="{!value.link}" 
+										GroupItems="{!value.groups}" DisableArticle="{!value.disableArticle}" DisableEnableCat="{!value.enable}"/>
+								</div>
+							</aura:iteration>
+						</div>
+					</div>
+				</div>
+				<!--END Articles Section-->
+			</div>
+			<div class="slds-col slds-theme_shade" style="padding:10px;">
+				<div>
+					<lightning:input name="input1" label="Email Subject" value="{!v.EmailSubject}"/>
+				</div>
+				<aura:if isTrue="{!v.ShowArticleInfo}">
+					<div class="elementSel">
+						<label Style="padding-right:10px;">Included Groups</label>
+						<aura:iteration items="{!v.GroupList}" indexVar="index" var="value">
+							<lightning:button class="{!value.selected == true ? 'selectedbutton' : 'notselectedbutton'}" variant="brand-outline" label="{!value.Name}" title="{!value.Name}" onclick="{! c.includeItem }" value="{!value.selected}"/>
+						</aura:iteration>
+					</div>
+					<div class="elementSel">
+						<lightning:input type="checkbox" label="Disabled: This article won't be included in any emails." name="input1" value="{!v.DisableArticle}"/>
+					</div>
+					<div class="elementSel">
+						<lightning:button class="{!v.DisableEnableCat == true ? 'selectedbutton' : 'notselectedbutton'}" variant="brand-outline" label="Enabled Category" title="Enabled Category" onclick="{! c.enable }" />
+						<lightning:button class="{!v.DisableDisableCat == true ? 'selectedbutton' : 'notselectedbutton'}" variant="brand-outline" label="Disabled Category" title="Disabled Category" onclick="{! c.disable }"/>
+					</div>
+				</aura:if> 
+			</div>
+		</div>
+	</article>
+</aura:component>

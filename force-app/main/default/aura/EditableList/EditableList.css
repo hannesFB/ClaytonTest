@@ -1,0 +1,14 @@
+.THIS .formWidth{
+    width:100%;
+}
+.THIS .slds-truncate {
+    text-overflow: inherit;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word; 
+}
+.THIS .floatButton {
+    position:absolute;
+    right:16px;
+    bottom:16px;
+}

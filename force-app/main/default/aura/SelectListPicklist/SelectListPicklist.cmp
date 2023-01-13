@@ -1,0 +1,31 @@
+<aura:component controller="SelectListPicklist" implements="force:hasRecordId,flexipage:availableForRecordHome,lightning:actionOverride" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="objInfo" type="String"/>
+    <aura:attribute name="label" type="String"/>
+    <aura:attribute name="selected" type="String"/>
+    <aura:attribute name="fieldAPI" type="String"/>
+    <aura:attribute name="defaultValue" type="String"/>
+    <aura:attribute name="hasDefault" type="Boolean"/>
+    <aura:attribute name="multi" type="Boolean" default="false"/>
+    <aura:attribute name="listId" type="String" default="myList"/>
+    <aura:attribute name="options" type="String[]"/>
+    <aura:attribute name="style" type="string" default="color: #FFFFFF"/>
+
+    <aura:registerEvent name="newSelectEvent" type="c:SelectListEvent"/>
+
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" style="{!v.style}">{!v.label}</label>
+        <div >
+            <ui:inputSelect aura:id="{!v.listId}" class="slds-select inputFieldBorder" change="{!c.onPicklistChange}" multiple="{!v.multi}">
+                <aura:iteration items="{!v.options}" var="opt">
+                    <aura:if isTrue="{!opt.label == v.defaultValue}">
+                        <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}" value="true"/>
+                        <aura:set attribute="else">
+                            <ui:inputSelectOption text="{!opt.label}" label="{!opt.label}" value="false"/>
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>
+    </div>
+</aura:component>

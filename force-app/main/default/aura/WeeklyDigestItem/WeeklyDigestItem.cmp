@@ -1,0 +1,17 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global">
+	<aura:attribute name="Title" type="String" default="Example Title"/>
+	<aura:attribute name="Time" type="String" default="Test"/>
+	<aura:attribute name="Remove" type="Boolean" default="false"/>
+	<aura:attribute name="BodyStr" type="String" default="Example Body!"/>
+	<aura:attribute name="LearnMore" type="String" default="More link"/>
+	
+	<aura:attribute name="GroupItems" type="object[]" default="{}"/>
+	<aura:attribute name="DisableArticle" type="boolean" default="false"/>
+	<aura:attribute name="DisableEnableCat" type="object"/>
+
+	<div Style="padding:10px;" class="{!v.Remove == true ? 'excludeCss' : ''}">
+		<div Style="color:#800000; font-size:15px; padding-bottom: 10px;">{!v.Title} {!v.Time == '' ? '' : ' (' + v.Time + ')'}</div>
+		<div>{!v.BodyStr}</div>
+		<lightning:button variant="base" label="Learn More" title="Learn More" onclick="{! c.handleClick }"/>
+	</div>
+</aura:component>

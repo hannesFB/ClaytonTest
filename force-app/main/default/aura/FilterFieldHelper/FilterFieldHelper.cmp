@@ -1,0 +1,64 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global">
+	<aura:attribute name="sObject" type="String"/>
+	<aura:attribute name="label" type="String"/>
+	<aura:attribute name="editable" type="String"/>
+	<aura:attribute name="type" type="String"/>
+	<aura:attribute name="api" type="String"/>
+	<aura:attribute name="value" type="String"/>
+	<aura:attribute name="name" type="String"/>
+    <aura:attribute name="cond" type="String"/>
+
+	<aura:if isTrue="{!v.type == 'PICKLIST'}" >
+		<label for="inputId1">{!v.label}</label>
+		<c:SelectListPicklist aura:id="valieId" label="" fieldAPI="{!v.api}" objInfo="{!v.sObject}" selected="{!v.value}"/>
+	</aura:if>
+
+	<aura:if isTrue="{!v.type == 'DATE'}" >
+		<div class="slds-grid slds-gutters">
+			<div class="slds-col slds-size_2-of-3">
+				<lightning:input type="date" name="{!v.label}" label="{!v.label}" value="{!v.value}"/>
+			</div>
+			<div class="slds-col slds-size_1-of-3">
+				<lightning:select name="select1" label="Date Condition" value="{!v.cond}">
+					<option value="">choose one...</option>
+					<option value="=">Equal</option>
+					<option value=">">Greater Than</option>
+					<option value="less">Less Than</option>
+					<option value=">=">Greater Than or Equal</option>
+					<option value="lessEqe">Less Than or Equal</option>
+				</lightning:select>
+			</div>
+		</div>
+	</aura:if>
+
+	<aura:if isTrue="{!v.type == 'DATETIME'}" >
+		<div class="slds-grid slds-gutters">
+			<div class="slds-col slds-size_2-of-3">
+				<lightning:input type="datetime" name="{!v.label}" label="{!v.label}" value="{!v.value}"/>
+			</div>
+			<div class="slds-col slds-size_1-of-3">
+				<lightning:select name="select1" label="Date Condition" value="{!v.cond}">
+					<option value="">choose one...</option>
+					<option value="=">Equal</option>
+					<option value=">">Greater Than</option>
+					<option value="less">Less Than</option>
+					<option value=">=">Greater Than or Equal</option>
+					<option value="lessEqe">Less Than or Equal</option>
+				</lightning:select>
+			</div>
+		</div>
+	</aura:if>
+
+	<aura:if isTrue="{!v.type == 'STRING'}" >
+		<lightning:input name="{!v.label}" label="{!v.label}" value="{!v.value}"/>
+	</aura:if>
+
+	<aura:if isTrue="{!v.type == 'BOOLEAN'}" >
+		<ui:inputCheckbox aura:id="checkbox" name="{!v.label}" label="{!v.label}" value="{!v.value}" change="{!c.onCheck}"/>
+	</aura:if>
+
+	<aura:if isTrue="{!or(v.type == 'INTEGER', v.type == 'DOUBLE', v.type == 'CURRENCY')}" >
+		<lightning:input type="number" name="{!v.label}" label="{!v.label}" value="{!v.value}"/>
+	</aura:if>
+
+</aura:component>

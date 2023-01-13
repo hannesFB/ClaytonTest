@@ -1,0 +1,33 @@
+.THIS .titleHeader{
+    font-size:30px;
+    padding-bottom:20px;
+    padding:10px;
+}
+.THIS .sectionHeader{
+    padding-left:10px;
+}
+.THIS.droparea{
+    border: 1px solid black;
+    position: relative;
+    margin: 3px;
+}
+.THIS.droparea .row {
+    position: relative;
+    border: 1px solid red;
+    padding: 3px;
+    margin: 3px;
+}
+.THIS .card:hover {
+    background-color:#F3F2F2;
+}
+.THIS .elementSel {
+    padding-top:40px;
+}
+.THIS .selectedbutton {
+    color:orange;
+    border-color:orange;
+}
+.THIS .notselectedbutton {
+    color:gray;
+    border-color:gray;
+}

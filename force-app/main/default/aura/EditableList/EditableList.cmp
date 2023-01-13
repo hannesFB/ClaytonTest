@@ -1,0 +1,279 @@
+<aura:component controller="EditableListController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+	
+	<!--All Component attributes: Defualts are used for quick actions-->
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="relationshipFieldApi" type="String" default=""/>
+	<aura:attribute name="parentSobjectApi" type="String" default=""/>
+	<aura:attribute name="childSobjectApi" type="String" default=""/>
+	<aura:attribute name="childSobjectNonEditFieldApis" type="String" default=""/>
+	<aura:attribute name="childSobjectEditFieldApis" type="String" default=""/>
+	<aura:attribute name="filterFieldApis" type="String" default=""/>
+	<aura:attribute name="Icon" type="String" default=""/>
+	<aura:attribute name="headerTitle" type="String" default=""/>
+	<aura:attribute name="limit" type="String"/>
+	<aura:attribute name="includedCustomActions" type="String" default=""/>
+	<aura:attribute name="colWidth" type="String" default=""/>
+    <aura:attribute name="actionColWidth" type="String" default=""/>
+	<aura:attribute name="extraFilters" type="String" default=""/>
+    
+    <aura:attribute name="sortByFirst" type="String" default=""/>
+    <aura:attribute name="sortBySecond" type="String" default=""/>
+	<aura:attribute name="sortOrder" type="String" default=""/>
+	
+	<aura:attribute name="showSaveAll" type="boolean" default="false"/>
+	<aura:attribute name="showFilters" type="boolean" default="false"/>
+	<aura:attribute name="showLineActions" type="boolean" default="false"/>
+	<aura:attribute name="showLineActionDelete" type="boolean" default="false"/>
+	<aura:attribute name="showLineActionEdit" type="boolean" default="false"/>
+    
+    <aura:attribute name="showTopButtons" type="boolean" default="false"/>
+    <aura:attribute name="showBottomButtons" type="boolean" default="false"/>
+
+	<aura:attribute name="fieldSetValues" type="List"/>
+	<aura:attribute name="filterFields" type="List"/>
+	<aura:attribute name="customActions" type="Object[]"/>
+	<aura:attribute name="tableRecords" type="Object[]"/>
+    <aura:attribute name="customFormAction" type="Object[]"/>
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+
+	<aura:attribute name="pageSize" type="integer" default="5"/>
+	<aura:attribute name="resultValsMap" type="Map"/>
+	<aura:attribute name="tableRecordsAll" type="Object[]"/>
+	<aura:attribute name="countVar" type="integer"/>
+    <aura:attribute name="maxPage" type="integer"/>
+    <aura:attribute name="totalCount" type="integer"/>
+	<aura:attribute name="getResults" type="boolean" default="true" />
+    <aura:attribute name="max" type="boolean" default="false" />
+    <aura:attribute name="min" type="boolean" default="false" />
+
+	<aura:attribute name="Spinner" type="boolean" default="false"/>
+
+	<!--When Component is loaded run init actions-->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+
+	<!--Override: Sets the popup window width. Has to be done in html tag and not in style-->
+	<aura:html tag="style">
+		.slds-modal__container{
+			width: 80% !important;
+			max-width: 80% !important;
+		}
+	</aura:html>
+
+	<div class="slds-box slds-theme_default">
+		<!--notificationsLibrary handles all popup errors: (Toast)-->
+		<lightning:notificationsLibrary aura:id="notifLib"/>
+
+		<div class="slds-page-header">
+			<div class="slds-page-header__row">
+				<div class="slds-page-header__col-title">
+					<div class="slds-media">
+						<div class="slds-media__figure">
+							<lightning:icon iconName="{!v.Icon}" size="small"/>
+						</div>
+						<div class="slds-media__body">
+							<div class="slds-page-header__name">
+								<div class="slds-page-header__name-title">
+									<h1>
+										<span class="slds-page-header__title slds-truncate" title="{!v.headerTitle}">{!v.headerTitle}</span>
+									</h1>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+                <div class="slds-page-header__col-actions">
+                  <div class="slds-page-header__controls">
+                    <div class="slds-page-header__control">
+                      <ul class="slds-button-group-list">
+                        <li>
+                            <aura:if isTrue="{!v.showTopButtons}">
+                                <aura:if isTrue="{!v.showSaveAll}">
+                                    <lightning:button label="Save All" name="save" variant="brand" onclick="{!c.onclicksave}"/>
+                                </aura:if>
+                    
+                                <aura:iteration items="{!v.customActions}" var="row">
+                                    <aura:if isTrue="{!row.Type__c == 'Form'}">
+                                        <lightning:button label="{!row.MasterLabel}" name="{!row.MasterLabel}" value="{!row.Id}" variant="brand" onclick="{!c.customFormActionEx}"/>
+                                        <aura:set attribute="else">
+                                            <lightning:button label="{!row.MasterLabel}" name="{!row.MasterLabel}" value="{!row.Id}" variant="brand" onclick="{!c.customActionEx}"/> 
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:iteration>
+                            </aura:if>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+			</div>
+		</div>
+
+		<aura:if isTrue="{!v.showFilters}">
+			<div class="slds-section slds-is-close" aura:id="filterSection">
+				<!--section header-->
+				<h3 class="slds-section__title">
+					<button aria-controls="filterList" class="slds-button slds-section__title-action">
+						<span onclick="{!c.toggleSection}" data-auraId="filterSection">
+							<lightning:icon iconName="utility:switch"
+											size="x-small"
+											class="slds-section__title-action-icon slds-button__icon_left"
+											alternativeText="button icon" 
+											/>
+						</span>
+						<span class="slds-truncate" title="Filters">Filters</span>
+					</button>
+				</h3>
+				<!--section body-->
+				<div class="slds-section__content" id="filterList">
+					<div Class="slds-p-left_medium slds-p-right_medium slds-p-bottom_medium">
+						<aura:iteration items="{!v.filterFields}" var="row">
+							<c:FilterFieldHelper sObject="{!v.childSobjectApi}" label="{!row.label}" type="{!row.type}" api="{!row.api}" value="{!row.value}"/>
+						</aura:iteration>
+						<lightning:buttonIcon iconName="utility:refresh" onclick="{! c.handleClick }" alternativeText="Refresh Table" />
+					</div>
+				</div>
+			</div>
+		</aura:if>
+
+		<!--Table-->
+		<div class="slds">
+			<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+				<thead>
+					<tr>
+						<aura:iteration items="{!v.fieldSetValues}" var="field">
+							<!--<th> {!field.label}</th>-->
+						</aura:iteration>
+					</tr>
+				</thead>
+				<tbody>
+					<!--Account Record Loop-->
+                    <aura:if isTrue="{!v.Spinner}">
+                        <div aura:id="spinnerId" class="slds-spinner_container" style="position:relative">
+                            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </aura:if>
+					<aura:iteration items="{!v.tableRecords}" var="row" indexVar="indx">
+						<lightning:recordEditForm aura:id="editForm" objectApiName="{!v.childSobjectApi}" recordId="{!row.Id}" onsuccess="{!c.handleOnSuccess}">
+						<lightning:messages />
+						<aura:if isTrue="{!indx == 0}">
+                            <tr>
+								<aura:iteration items="{!v.fieldSetValues}" var="field">
+									<td class="slds-text-title_caps" style="{!v.colWidth}"><label for="inputId0">{!field.label}</label></td>	
+								</aura:iteration>
+								<aura:if isTrue="{!v.showLineActions}">
+									<td class="slds-text-title_caps" style="{!v.colWidth}"><label for="inputId0">Action</label></td>
+								</aura:if>
+                            </tr>
+                            <aura:set attribute="else">
+                                <tr>
+									<aura:iteration items="{!v.fieldSetValues}" var="field">
+										<td class="slds-hidden slds-text-title_caps" style="{!v.colWidth}"><label for="inputId0">{!field.label}</label></td>	
+									</aura:iteration>
+									<aura:if isTrue="{!v.showLineActions}">
+										<td class="slds-hidden slds-text-title_caps" style="{!v.colWidth}"><label for="inputId0">Action</label></td>
+									</aura:if>
+                                </tr>
+                            </aura:set>
+                        </aura:if>
+
+
+						<tr>
+							<!--Account FieldSet loop-->
+							<aura:iteration items="{!v.fieldSetValues}" var="field">
+								<td style="{!v.colWidth}">
+                                    <aura:if isTrue="{!field.editable == 'false'}">
+                                        <!--<label for="inputId1">{!field.label}</label>-->
+                                        <lightning:outputField class="slds-cell-fixed slds-truncate" variant="label-hidden" fieldName="{!field.api}" />
+                                        <aura:set attribute="else">
+                                            <!--<label for="inputId1">{!field.label}</label>-->
+                                            <lightning:inputField id="inputId1" fieldName="{!field.api}" disabled="{!field.editable == 'false'}" variant="label-hidden"/>
+                                        </aura:set>
+									</aura:if>
+                                 </td>
+							</aura:iteration>
+							<td style="{!v.actionColWidth}">
+								<!--<label for="inputId1">Actions</label>-->
+								<div class="slds-p-top_xxx-small">
+									<aura:if isTrue="{!v.showLineActions}">
+										<lightning:buttonIcon iconName="utility:save" aura:id="submit" size="small" alternativeText="Save" type="submit" onclick="{!c.setLoading}"/>
+									</aura:if>
+									<aura:if isTrue="{!v.showLineActionDelete}">
+										<lightning:buttonIcon iconName="utility:delete" value="{!row.Id}" aura:id="delete" size="small" alternativeText="Delete" onclick="{!c.handleDeleteRecord}"/>
+									</aura:if>
+									<aura:if isTrue="{!v.showLineActionEdit}">
+										<lightning:buttonIcon iconName="utility:edit" value="{!row.Id}" aura:id="edit" size="small" alternativeText="Edit" onclick="{!c.handleEditRecord}"/>
+									</aura:if>
+								</div>
+							</td>
+						</tr>
+						</lightning:recordEditForm>
+					</aura:iteration>
+				</tbody>
+			</table>
+		</div>
+		
+		<aura:if isTrue="{!!v.getResults}">
+            <div style="padding-right:10px;">Results: {!v.totalCount} | Page {!v.countVar+1} of {!v.maxPage+1} </div>
+            <lightning:button disabled="{!v.min}" variant="brand" label="Previous Page" title="Previous Page" onclick="{! c.backPage }" />
+            <lightning:button disabled="{!v.max}" variant="brand" label="Next Page" title="Next Page" onclick="{! c.nextPage }" />
+        </aura:if>
+
+		<div class="floatButton">
+            <aura:if isTrue="{!v.showBottomButtons}">
+                <aura:if isTrue="{!v.showSaveAll}">
+                    <lightning:button label="Save All" name="save" variant="brand" onclick="{!c.onclicksave}"/>
+                </aura:if>
+    
+                <aura:iteration items="{!v.customActions}" var="row">
+                    <aura:if isTrue="{!row.Type__c == 'Form'}">
+                        <lightning:button label="{!row.MasterLabel}" name="{!row.MasterLabel}" value="{!row.Id}" variant="brand" onclick="{!c.customFormActionEx}"/>
+                        <aura:set attribute="else">
+                            <lightning:button label="{!row.MasterLabel}" name="{!row.MasterLabel}" value="{!row.Id}" variant="brand" onclick="{!c.customActionEx}"/> 
+                        </aura:set>
+                    </aura:if>
+                </aura:iteration>
+            </aura:if>
+		</div>
+
+	</div>
+    
+    <aura:if isTrue="{!v.isOpen}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Record</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:recordEditForm aura:id="editForm2" objectApiName="{!v.childSobjectApi}" onsuccess="{!c.afterSub}" onerror="{!c.handleOnError}">
+                        <div class="slds-grid slds-wrap">
+                            <aura:iteration items="{!v.customFormAction}" var="row">
+                                <div class="slds-col slds-size_1-of-2">
+                                	<lightning:inputField id="inputId2" fieldName="{!row.fieldApi}" value="{!row.fieldValue}"/>
+                                </div>
+                            </aura:iteration>
+                       
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning:button variant="brand" type="submit" name="save" label="Save"/>
+                                <lightning:button variant="neutral" 
+                                              label="Cancel"
+                                              title="Cancel"
+                                              onclick="{! c.closeModel }"/>
+                            </div>
+                        </div>
+                    </lightning:recordEditForm>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

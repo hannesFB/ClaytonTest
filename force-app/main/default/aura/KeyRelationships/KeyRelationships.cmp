@@ -1,0 +1,114 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global">
+	
+	<aura:attribute name="schemaName" type="String" default="Key Relationships" />
+	<aura:attribute name="recordId" type="String" />
+	<aura:attribute name="cells" type="Object"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<div class="slds-box slds-theme_default">
+		<table class="slds-table slds-table--bordered">
+			<thead>
+				<tr>
+					<aura:iteration items="{!v.cells}" var="cell" indexVar="i">
+						<aura:if isTrue="{!cell.cellType == 'header'}">
+							<th scope="col" aria-label="{!cell.label}" data-i="{!i}">
+								{!cell.label}      
+							</th>
+						</aura:if>
+					</aura:iteration>
+				</tr>
+			</thead>
+			<tbody>
+				<aura:iteration items="{!v.cells}" var="cell" indexVar="i">
+					<aura:if isTrue="{!cell.cellType == 'data'}">
+						<tr>
+							<td scope="col">
+								<div style="display:inline-block;">
+									<lightning:buttonIcon aura:id="downIcon"
+									  iconName="{! cell.expand ? 'utility:chevrondown' : 'utility:chevronright' }"
+									  variant="bare" 
+									  value="{!cell.expand}"
+									  alternativeText="Settings" 
+									  iconClass="dark" 
+									  class="slds-button slds-input__icon slds-text-color--default"
+									  onclick="{!c.clickHandler}"/>
+								</div>
+								<div style="display:inline-block;">
+									{!cell.value.Name}
+								</div>
+							</td>
+							<td scope="col">
+								{!cell.value.Relationship}
+							</td>
+							<td scope="col">
+								<a href="javascript:void(0)" onclick="{!c.doSomething}">{!cell.value.Actions}</a>
+							</td>
+						</tr>
+						<!--SECOND TABLE-->
+						<aura:if isTrue="{!cell.expand}">
+							<tr Class="slds-theme_shade boldText">
+								<aura:iteration items="{!cell.subValue}" var="cell2" indexVar="i">
+									<aura:if isTrue="{!cell2.cellType == 'header'}">
+										<th scope="col" aria-label="{!cell.label2}" data-i="{!i}">
+											{!cell2.label}      
+										</th>
+									</aura:if>
+								</aura:iteration>
+							</tr>
+							<aura:iteration items="{!cell.subValue}" var="cell2" indexVar="i">
+								<aura:if isTrue="{!cell2.cellType == 'data'}">
+									<tr>
+										<td scope="col">
+											{!cell2.value.Type}
+										</td>
+										<td scope="col">
+											<lightning:progressBar class="{! cell2.value.Points > 30 ? 'tier-two' : 'tier-one'}" value="{!cell2.value.Points}" size="small" />
+											{!cell2.value.Points}pts
+										</td>
+										<td scope="col">
+											{!cell2.value.Date}
+										</td>
+									</tr>
+								</aura:if>
+							</aura:iteration>
+						</aura:if>
+					<!--SECOND TABLE-->
+					</aura:if>
+				</aura:iteration>
+			</tbody>
+		</table>
+	</div>
+</aura:component>
+
+<!--Inside Table-->
+		<!--<aura:if isTrue="{!cell.expand}">
+			<table role="grid" tabindex="false" style="table-layout: fixed;">
+				<tbody>
+					<aura:iteration items="{!cell.activities}" var="rows" indexVar="i">
+					<tr class="slds-line-height_reset">
+						<aura:iteration items="{!rows}" var="cell" indexVar="j">
+						<aura:if isTrue="{!cell.cellType == 'header'}">
+							<th scope="col" tabindex="-1" aria-label="{!cell.label}" data-i="{!i}" onclick="{!c.sortRow}">
+							<aura:if isTrue="{!cell.currentSort}">
+								<div title="{!cell.label}" class="slds-truncate sort">
+								{!cell.label}
+								<lightning:icon iconName="{! cell.currentSort == 'asc' ? 'utility:chevronleft' : 'utility:chevronright' }"></lightning:icon>
+								</div>
+								<aura:set attribute="else">
+								<div title="{!cell.label}" class="slds-truncate">{!cell.label}</div>
+								</aura:set>
+							</aura:if>                        
+							</th>
+						</aura:if>
+						<aura:if isTrue="{!cell.cellType == 'data'}">
+							<td scope="col" tabindex="-1" aria-label="{!cell.value}" onclick="{!c.editCell}" class="{!greaterthan(j, v.maxItems) ? 'hideCell' : cell.modified ? 'modified' : ''}"
+								data-label="{!cell.label}" data-value="{!cell.value}" data-i="{!i}" data-j="{!j}">
+							<div title="{!cell.value}" class="slds-truncate">{!cell.value}</div>
+							</td>
+						</aura:if>
+						</aura:iteration>
+					</tr>
+					</aura:iteration>
+				</tbody>
+			</table>
+		</aura:if>-->
